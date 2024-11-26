@@ -85,7 +85,7 @@ public class ProductController {
         return ResponseEntity.status(400).body(new ApiResponse("Product not found."));
     }
     @PutMapping("/setExpiryDate/{id}/{expiryDate}")
-    public ResponseEntity setProductExpiryDate(@PathVariable String id, @PathVariable LocalDate expiryDate) {
+    public ResponseEntity setProductExpiryDate(@PathVariable String id, @PathVariable String expiryDate) {
         String response = productService.setProductExpiryDate(id, expiryDate);
         return ResponseEntity.status(200).body(new ApiResponse(response));
     }

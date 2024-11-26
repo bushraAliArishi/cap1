@@ -26,7 +26,7 @@ public class MerchantStockService {
         }
 
         boolean merchantExists = false;
-        for (Merchant merchant : merchantService.getMerchants()) {
+        for (Merchant merchant : merchantService.getAllMerchants()) {
             if (merchant.getId().equalsIgnoreCase(merchantID)) {
                 merchantExists = true;
                 break;

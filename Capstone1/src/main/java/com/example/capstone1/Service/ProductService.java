@@ -80,10 +80,11 @@ public class ProductService {
         }
         return false;
     }
-    public String setProductExpiryDate(String id, LocalDate expiryDate) {
+    public String setProductExpiryDate(String id, String expiryDate) {
+
         for (Product product : products) {
             if (product.getId().equals(id)) {
-                product.setExpiryDate(expiryDate);
+                product.setExpiryDate(LocalDate.parse(expiryDate));
                 return "Product expiry date updated.";
             }
         }
