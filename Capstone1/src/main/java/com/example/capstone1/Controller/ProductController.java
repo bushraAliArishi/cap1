@@ -60,6 +60,11 @@ public class ProductController {
         ArrayList<Product> products = productService.getProductsByCategory(categoryID);
         return ResponseEntity.status(200).body(new ApiResponse("Products in category " + categoryID+" "+ products));
     }
+    @PutMapping("/resetPrice/{id}")
+    public ResponseEntity resetPrice(@PathVariable String id) {
+        String response = productService.resetPrice(id);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/cheapest")
     public ResponseEntity findCheapestProduct() {
@@ -75,20 +80,20 @@ public class ProductController {
         int count = productService.countProductsByCategory(categoryID);
         return ResponseEntity.status(200).body(new ApiResponse("Total products in category " + categoryID + ": " + count));
     }
-
-    @PutMapping("/{id}/discount/{percentage}")
-    public ResponseEntity applyDiscountToProduct(@PathVariable String id, @PathVariable double percentage) {
-        boolean success = productService.applyDiscountToProduct(id, percentage);
-        if (success) {
-            return ResponseEntity.status(200).body(new ApiResponse("Discount applied successfully."));
-        }
-        return ResponseEntity.status(400).body(new ApiResponse("Product not found."));
+    @PutMapping("/applyDiscount/{productId}/{merchantId}/{discountPercentage}")
+    public ResponseEntity<String> applyDiscount(
+            @PathVariable String productId,
+            @PathVariable String merchantId,
+            @PathVariable double discountPercentage) {
+        String response = productService.applyDiscount(productId, merchantId, discountPercentage);
+        return ResponseEntity.ok(response);
     }
     @PutMapping("/setExpiryDate/{id}/{expiryDate}")
-    public ResponseEntity setProductExpiryDate(@PathVariable String id, @PathVariable String expiryDate) {
-        String response = productService.setProductExpiryDate(id, expiryDate);
-        return ResponseEntity.status(200).body(new ApiResponse(response));
+    public ResponseEntity setExpiryDate(
+            @PathVariable String id,
+            @PathVariable String expiryDate) {
+        String response = productService.setExpiryDate(id, expiryDate);
+        return ResponseEntity.ok(response);
     }
-
 
 }

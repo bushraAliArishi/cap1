@@ -26,7 +26,7 @@ public class Product {
     private double flashSalePrice = 0.0;
 
     private int flashSaleDuration = 0;
-
+    private double originalPrice;
     private int buyCount=0;
     @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDate expiryDate;

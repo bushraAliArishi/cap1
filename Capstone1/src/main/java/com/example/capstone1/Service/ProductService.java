@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class ProductService {
     final private ArrayList<Product> products = new ArrayList<>();
+    private MerchantStockService merchantStockService;
+
 
     // CRUD Operations
     public ArrayList<Product> getProducts() {
@@ -70,15 +72,25 @@ public class ProductService {
         return count;
     }
 
-    public boolean applyDiscountToProduct(String id, double discountPercentage) {
+
+    public String applyDiscount(String productId, String merchantId, double discountPercentage) {
+        if (discountPercentage <= 0 || discountPercentage > 100) {
+            return "Invalid discount percentage. It must be between 1 and 100.";
+        }
+
+        boolean merchantOwnsProduct = merchantStockService.checkMerchantOwnsProduct(merchantId, productId);
+        if (!merchantOwnsProduct) {
+            return "This merchant does not own the specified product.";
+        }
+
         for (Product product : products) {
-            if (product.getId().equalsIgnoreCase(id)) {
-                double discountedPrice = product.getPrice() - (product.getPrice() * discountPercentage / 100);
-                product.setPrice(discountedPrice);
-                return true;
+            if (product.getId().equals(productId)) {
+                double newPrice = product.getPrice() - (product.getPrice() * discountPercentage / 100);
+                product.setPrice(newPrice);
+                return "Discount applied successfully. New price: " + newPrice;
             }
         }
-        return false;
+        return "Product not found.";
     }
     public String setProductExpiryDate(String id, String expiryDate) {
 
@@ -86,6 +98,28 @@ public class ProductService {
             if (product.getId().equals(id)) {
                 product.setExpiryDate(LocalDate.parse(expiryDate));
                 return "Product expiry date updated.";
+            }
+        }
+        return "Product not found.";
+    }
+    public String resetPrice(String productId) {
+        for (Product product : products) {
+            if (product.getId().equals(productId)) {
+                if (product.getOriginalPrice() == 0) {
+                    return "The product has no discount to reset.";
+                }
+                product.setPrice(product.getOriginalPrice());
+                return "Price reset to the original price: " + product.getOriginalPrice();
+            }
+        }
+        return "Product not found.";
+    }
+
+    public String setExpiryDate(String productId, String expiryDate) {
+        for (Product product : products) {
+            if (product.getId().equals(productId)) {
+                product.setExpiryDate(LocalDate.parse(expiryDate));
+                return "Expiry date updated successfully for product ID: " + productId;
             }
         }
         return "Product not found.";

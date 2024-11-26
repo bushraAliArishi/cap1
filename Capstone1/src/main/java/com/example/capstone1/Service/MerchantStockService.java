@@ -15,7 +15,16 @@ public class MerchantStockService {
     public ArrayList<MerchantStock> getMerchantStocks() {
         return merchantStocks;
     }
-
+    public boolean checkMerchantOwnsProduct(String merchantId, String productId) {
+        // Loop through the list of MerchantStock
+        for (MerchantStock stock : merchantStocks) {
+            // Check if both merchant ID and product ID match
+            if (stock.getMerchantID().equals(merchantId) && stock.getProductID().equals(productId)) {
+                return true; // Merchant owns the product
+            }
+        }
+        return false; // Merchant does not own the product
+    }
     public String addMerchantStock(MerchantStock merchantStock, String merchantID, String productID) {
         boolean productExists = false;
         for (Product product : productService.getProducts()) {
