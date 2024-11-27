@@ -3,13 +3,23 @@ package com.example.capstone1.Service;
 import com.example.capstone1.Model.Merchant;
 import com.example.capstone1.Model.MerchantStock;
 import com.example.capstone1.Model.Product;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-
+@Service
 public class MerchantStockService {
     final private ArrayList<MerchantStock> merchantStocks = new ArrayList<>();
     final private ProductService productService = new ProductService();
     final private MerchantService merchantService = new MerchantService();
+
+    public void merchantStockaddService() {
+        // Adding default merchant stocks
+        merchantStocks.add(new MerchantStock("MS001", "P001", "M001", 50));
+        merchantStocks.add(new MerchantStock("MS002", "P002", "M002", 30));
+        merchantStocks.add(new MerchantStock("MS003", "P003", "M003", 15));
+        merchantStocks.add(new MerchantStock("MS004", "P004", "M004", 70));
+        merchantStocks.add(new MerchantStock("MS005", "P005", "M005", 100));
+    }
 
     // CRUD
     public ArrayList<MerchantStock> getMerchantStocks() {
@@ -25,10 +35,10 @@ public class MerchantStockService {
         }
         return false; // Merchant does not own the product
     }
-    public String addMerchantStock(MerchantStock merchantStock, String merchantID, String productID) {
+    public String addMerchantStock(MerchantStock merchantStock) {
         boolean productExists = false;
         for (Product product : productService.getProducts()) {
-            if (product.getId().equalsIgnoreCase(productID)) {
+            if (product.getId().equalsIgnoreCase(merchantStock.getProductID())) {
                 productExists = true;
                 break;
             }
@@ -36,7 +46,7 @@ public class MerchantStockService {
 
         boolean merchantExists = false;
         for (Merchant merchant : merchantService.getAllMerchants()) {
-            if (merchant.getId().equalsIgnoreCase(merchantID)) {
+            if (merchant.getId().equalsIgnoreCase(merchantStock.getMerchantID())) {
                 merchantExists = true;
                 break;
             }
@@ -73,30 +83,6 @@ public class MerchantStockService {
         return false;
     }
 
-    public boolean increaseStock(String merchantID, String productID, int quantity) {
-        for (MerchantStock stock : merchantStocks) {
-            if (stock.getMerchantID().equalsIgnoreCase(merchantID) &&
-                    stock.getProductID().equalsIgnoreCase(productID)) {
-                stock.setStock(stock.getStock() + quantity);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean decreaseStock(String merchantID, String productID, int quantity) {
-        for (MerchantStock stock : merchantStocks) {
-            if (stock.getMerchantID().equalsIgnoreCase(merchantID) &&
-                    stock.getProductID().equalsIgnoreCase(productID)) {
-                if (stock.getStock() >= quantity) {
-                    stock.setStock(stock.getStock() - quantity);
-                    return true;
-                }
-                return false; // Insufficient stock
-            }
-        }
-        return false;
-    }
 
     public MerchantStock findMerchantStock(String merchantID, String productID) {
         for (MerchantStock stock : merchantStocks) {
@@ -106,16 +92,6 @@ public class MerchantStockService {
             }
         }
         return null;
-    }
-
-    public ArrayList<MerchantStock> findLowStock(int threshold) {
-        ArrayList<MerchantStock> lowStock = new ArrayList<>();
-        for (MerchantStock stock : merchantStocks) {
-            if (stock.getStock() < threshold) {
-                lowStock.add(stock);
-            }
-        }
-        return lowStock;
     }
 
     public ArrayList<MerchantStock> findMerchantStocksByMerchant(String merchantID) {

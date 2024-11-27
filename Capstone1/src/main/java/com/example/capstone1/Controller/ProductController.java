@@ -21,8 +21,8 @@ public class ProductController {
 
     @GetMapping("/get")
     public ResponseEntity getProducts() {
-        ArrayList<Product> products = productService.getProducts();
-        return ResponseEntity.status(200).body(new ApiResponse("Products retrieved successfully."+ products));
+        productService.productaddService();
+        return ResponseEntity.status(200).body(new ApiResponse("Products retrieved successfully."+ productService.getProducts()));
     }
 
     @PostMapping("/add")
@@ -65,6 +65,10 @@ public class ProductController {
         String response = productService.resetPrice(id);
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/requestRestock/{customerId}/{productId}/{merchantId}")
+    public String requestRestock(@PathVariable String customerId, @PathVariable String productId, @PathVariable String merchantId) {
+        return productService.requestRestock(customerId, productId, merchantId);
+    }
 
     @GetMapping("/cheapest")
     public ResponseEntity findCheapestProduct() {
@@ -95,5 +99,6 @@ public class ProductController {
         String response = productService.setExpiryDate(id, expiryDate);
         return ResponseEntity.ok(response);
     }
+
 
 }

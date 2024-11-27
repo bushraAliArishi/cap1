@@ -16,8 +16,9 @@ public class MerchantController {
     private final MerchantService merchantService;
 
 
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<ArrayList<Merchant>> getAllMerchants() {
+        merchantService.merchantaddService();
         return ResponseEntity.ok(merchantService.getAllMerchants());
     }
 

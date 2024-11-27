@@ -8,14 +8,22 @@ import java.util.ArrayList;
 
 @Service
 public class MerchantService {
-
-    private ArrayList<Merchant> merchants = new ArrayList<>();
+    private final ArrayList<Merchant> merchants = new ArrayList<>();
     private UserService userService;
 
+    public void merchantaddService() {
+        // Adding default merchants
+        merchants.add(new Merchant("M001", "Tech Store", true, "Riyadh", "KSA"));
+        merchants.add(new Merchant("M002", "Book Haven", false, "Jeddah", "KSA"));
+        merchants.add(new Merchant("M003", "Gadget Hub", true, "Dammam", "KSA"));
+        merchants.add(new Merchant("M004", "Fashion World", false, "Mecca", "KSA"));
+        merchants.add(new Merchant("M005", "Home Appliances", true, "Khobar", "KSA"));
+    }
 
     public ArrayList<Merchant> getAllMerchants() {
         return merchants;
     }
+
 
     public String addMerchant(Merchant merchant) {
         for (Merchant m : merchants) {

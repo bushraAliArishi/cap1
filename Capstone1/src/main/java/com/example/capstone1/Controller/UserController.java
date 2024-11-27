@@ -1,6 +1,7 @@
 package com.example.capstone1.Controller;
 
 import com.example.capstone1.ApiResponse.ApiResponse;
+import com.example.capstone1.Model.Product;
 import com.example.capstone1.Model.User;
 import com.example.capstone1.Service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,14 @@ public class UserController {
     // Get all users
     @GetMapping("/get")
     public ResponseEntity getUsers() {
-        ArrayList<User> users = userService.getUsers();
-        return ResponseEntity.ok(users);
+        userService.adduserService();
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     // Add a new user
     @PostMapping("/add")
     public ResponseEntity addUser(@RequestBody User user, Errors errors) {
+
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors.getFieldError().getDefaultMessage());
         }
@@ -105,6 +107,31 @@ public class UserController {
             return ResponseEntity.status(200).body(new ApiResponse("User granted admin role successfully."));
         }
         return ResponseEntity.status(403).body(new ApiResponse("Action forbidden or user not found."));
+    }
+    @PutMapping("/visit/{userId}")
+    public ResponseEntity<ApiResponse> visitProduct(@PathVariable String userId, @RequestBody String productId) {
+        if (userId == null || userId.isEmpty() || productId == null || productId.isEmpty()) {
+            return ResponseEntity.status(400).body(new ApiResponse("User ID and Product ID cannot be null or empty."));
+        }
+
+        String responseMessage = userService.logProductVisit(userId, productId.trim());
+        if (responseMessage.contains("added to visit history")) {
+            return ResponseEntity.status(200).body(new ApiResponse(responseMessage));
+        }
+        return ResponseEntity.status(404).body(new ApiResponse(responseMessage));
+    }
+
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<?> getVisitHistory(@PathVariable String userId) {
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.status(400).body(new ApiResponse("User ID cannot be null or empty."));
+        }
+
+        ArrayList<Product> history = userService.getVisitHistory(userId);
+        if (history == null) {
+            return ResponseEntity.status(404).body(new ApiResponse("User not found: " + userId));
+        }
+        return ResponseEntity.status(200).body(history);
     }
 
 }

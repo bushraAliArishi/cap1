@@ -19,6 +19,7 @@ public class CategoryController {
 
     @GetMapping("/get")
     public ResponseEntity getCategories() {
+        categoryService.categoryaddService();
         return ResponseEntity.status(200).body(categoryService.getCategories());
     }
 

@@ -8,11 +8,17 @@ public class CategoryService {
 
     private final ArrayList<Category> categories = new ArrayList<>();
 
-    // CRUD operations
-    public ArrayList<Category> getCategories() {
+    public void categoryaddService() {
+        // Adding default categories
+        categories.add(new Category("C001", "Electronics"));
+        categories.add(new Category("C002", "Books"));
+        categories.add(new Category("C003", "Clothing"));
+        categories.add(new Category("C004", "Furniture"));
+        categories.add(new Category("C005", "Sports"));
+    }
+    public ArrayList<Category> getCategories(){
         return categories;
     }
-
     public String addCategory(Category category) {
         categories.add(category);
         return "Category added successfully.";

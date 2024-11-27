@@ -1,15 +1,27 @@
 package com.example.capstone1.Service;
 
+import com.example.capstone1.Model.Product;
 import com.example.capstone1.Model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-
+@Service
 public class UserService {
-    final private ArrayList<User> users = new ArrayList<>();
+     private final ArrayList<User> users = new ArrayList<>();
+     private  ProductService productService;
+
+    public void adduserService() {
+        // Adding default users
+        users.add(new User("U001", "admin1", "Admin123", "admin1@example.com", "Admin", 1000.0, new ArrayList<>()));
+        users.add(new User("U002", "customer1", "Cust123", "cust1@example.com", "Customer", 500.0, new ArrayList<>()));
+        users.add(new User("U003", "customer2", "Cust456", "cust2@example.com", "Customer", 300.0, new ArrayList<>()));
+        users.add(new User("U004", "admin2", "Admin456", "admin2@example.com", "Admin", 1200.0, new ArrayList<>()));
+        users.add(new User("U005", "customer3", "Cust789", "cust3@example.com", "Customer", 800.0, new ArrayList<>()));
+    }
 
     // CRUD Operations
     public ArrayList<User> getUsers() {
-        return users;
+      return users;
     }
 
     public String addUser(User user) {
@@ -77,13 +89,14 @@ public class UserService {
         }
         return count;
     }
+
     public User getUserById(String id) {
         for (User user : users) {
             if (user.getId().equals(id)) {
                 return user;
             }
         }
-        return null;  // Return null if user is not found
+        return null;
     }
     public boolean grantAdminRole(String adminId, String targetUserId) {
         User admin = getUserById(adminId);
@@ -98,6 +111,25 @@ public class UserService {
             }
         }
         return false;
+    }
+
+    public String logProductVisit(String userId, String productID) {
+        for (User user : users) {
+            if (user.getId().equals(userId)) {
+                user.getVisitHistory().add(productService.getProductById(productID));
+                return "Product " +productService.getProductById(productID)+ " added to visit history for user " + userId + ".";
+            }
+        }
+        return "User not found: " + userId;
+    }
+
+    public ArrayList<Product> getVisitHistory(String userId) {
+        for (User user : users) {
+            if (user.getId().equals(userId)) {
+                return user.getVisitHistory();
+            }
+        }
+        return null;
     }
 
 }

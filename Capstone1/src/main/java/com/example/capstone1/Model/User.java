@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Data
 @AllArgsConstructor
 public class User {
@@ -26,5 +28,7 @@ public class User {
     @NotNull(message = "the balance cant be empty")
     @PositiveOrZero(message = "must be positive number or zero")
     private double balance;
+    private ArrayList<Product> visitHistory;
+
 
 }
